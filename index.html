@@ -1,1 +1,505 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전주여자고등학교 교육과정 탐색</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+:root {
+  --bg: #f7f8fa;
+  --panel: #ffffff;
+  --ink: #222831;
+  --muted: #667085;
+  --line: #d9dee8;
+  --primary: #116149;
+  --primary-strong: #0b4434;
+  --primary-soft: #e6f4ef;
+  --accent: #d14a3a;
+  --accent-soft: #fdecea;
+  --gold: #a27312;
+  --gold-soft: #fff5d8;
+  --blue: #286fb4;
+  --blue-soft: #e8f2fc;
+  --violet: #7357b8;
+  --violet-soft: #f0ecfb;
+  --shadow: 0 2px 12px rgba(20,30,40,0.07);
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Noto Sans KR", sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select { font: inherit; cursor: pointer; }
+
+/* ── 로그인 화면 ── */
+#loginScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 40px 36px;
+  text-align: center;
+}
+
+.login-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--primary-soft);
+  margin-bottom: 20px;
+}
+
+.login-logo svg {
+  width: 28px;
+  height: 28px;
+  fill: var(--primary);
+}
+
+.login-card h1 {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.login-card p {
+  font-size: 0.86rem;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.login-error {
+  display: none;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: var(--accent-soft);
+  border: 1px solid #f5c6c0;
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-size: 0.83rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.login-error.visible { display: block; }
+
+/* Google 로그인 버튼 중앙 정렬 */
+#googleLoginBtn {
+  display: flex;
+  justify-content: center;
+}
+
+.login-notice {
+  margin-top: 20px;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+/* ── 앱 메인 화면 (로그인 후) ── */
+#appScreen { display: none; }
+#appScreen.visible { display: block; }
+
+/* ── 상단바 ── */
+.topbar {
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 14px 18px;
+}
+
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+
+.eyebrow {
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+h1 {
+  margin-top: 2px;
+  color: var(--ink);
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+/* ── 사용자 정보 + 로그아웃 ── */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  object-fit: cover;
+}
+
+.user-name {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--ink);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-btn {
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.logout-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* ── 로딩 스피너 ── */
+#loadingScreen {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#loadingScreen.visible { display: flex; }
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--line);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-text {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+/* ── 메인 콘텐츠 영역 (기존 ver5 스타일 유지) ── */
+#mainContent {
+  display: none;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 18px 18px 42px;
+}
+
+#mainContent.visible { display: block; }
+
+/* 임시 안내 */
+.placeholder-notice {
+  padding: 32px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.placeholder-notice h2 {
+  font-size: 1.1rem;
+  font-weight: 900;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.placeholder-notice p {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+/* ── ver5 UI 스타일 (이식) ── */
+.controls {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(247,248,250,0.96);
+  border-bottom: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.controls-inner {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  max-width: 1240px; margin: 0 auto; padding: 14px 18px; align-items: center;
+}
+.search-box { position: relative; flex: 1 1 330px; }
+.search-box::before {
+  content: "검색"; position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); font-size: 0.78rem; font-weight: 800;
+}
+.search-box input {
+  width: 100%; min-height: 44px; padding: 10px 14px 10px 50px;
+  border: 1.5px solid var(--line); border-radius: var(--radius);
+  background: var(--panel); color: var(--ink); font-size: 0.95rem;
+}
+.search-box input:focus { outline: 3px solid rgba(17,97,73,0.14); border-color: var(--primary); }
+.filter-groups { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); flex: 1 1 560px; gap: 8px; }
+.multi-filter { position: relative; }
+.multi-filter summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  min-height: 38px; padding: 8px 10px; border: 1.5px solid var(--line);
+  border-radius: var(--radius); background: var(--panel); list-style: none; cursor: pointer;
+}
+.multi-filter summary::-webkit-details-marker { display: none; }
+.multi-filter[open] summary { border-color: var(--primary); background: var(--primary-soft); }
+.multi-filter-label { color: var(--ink); font-size: 0.82rem; font-weight: 800; }
+.filter-summary { color: var(--muted); font-size: 0.74rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.multi-filter-options {
+  position: absolute; left: 0; top: calc(100% + 6px); z-index: 35;
+  width: min(320px,calc(100vw - 36px)); max-height: 280px; overflow: auto;
+  padding: 8px; border: 1px solid #dfe5ee; border-radius: var(--radius);
+  background: var(--panel); box-shadow: var(--shadow-hover);
+}
+.filter-option { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 9px; align-items: start; padding: 8px 9px; border-radius: 7px; cursor: pointer; }
+.filter-option:hover { background: #f7faf8; }
+.filter-option input { margin-top: 2px; accent-color: var(--primary); }
+.filter-option-name { color: var(--ink); font-size: 0.82rem; font-weight: 800; }
+.filter-option-count { color: var(--muted); font-size: 0.72rem; font-weight: 700; }
+.sort-select, .filter-reset-btn {
+  min-height: 38px; padding: 8px 12px; border: 1.5px solid var(--line);
+  border-radius: var(--radius); background: var(--panel); color: var(--ink);
+  font-size: 0.86rem; font-weight: 700;
+}
+.filter-reset-btn { color: var(--muted); }
+.filter-reset-btn:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.container { max-width: 1240px; margin: 0 auto; padding: 18px 18px 42px; }
+.section-head { display: flex; justify-content: space-between; gap: 14px; margin: 20px 0 12px; align-items: flex-end; }
+.section-head h2 { color: var(--ink); font-size: 1.12rem; font-weight: 900; }
+.title-inline { display: inline-flex; align-items: center; gap: 8px; }
+.stats-bar { color: var(--muted); font-size: 0.84rem; }
+.section-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; align-items: center; }
+.semester-filter-btns { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.semester-filter-btn {
+  min-height: 32px; padding: 6px 10px; border: 1.5px solid var(--line);
+  border-radius: var(--radius); background: var(--panel); color: var(--muted);
+  font-size: 0.78rem; font-weight: 700; cursor: pointer;
+}
+.semester-filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+.semester-filter-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.toggle-btn {
+  min-height: 34px; padding: 7px 11px; border: 1.5px solid var(--line);
+  border-radius: var(--radius); background: var(--panel); color: var(--primary);
+  font-size: 0.82rem; font-weight: 800; cursor: pointer;
+}
+.toggle-btn:hover { border-color: var(--primary); background: var(--primary-soft); }
+.sticky-semesters.is-collapsed .semester-grid { display: none; }
+.sticky-semesters.is-collapsed .section-actions { display: none; }
+.semester-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; }
+.semester-card { background: var(--panel); border: 1px solid rgba(20,30,40,0.07); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.semester-card header { padding: 15px 16px 12px; border-bottom: 1px solid #edf0f5; }
+.semester-card h3 { font-size: 1.02rem; font-weight: 900; }
+.semester-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+.mini-stat { display: inline-flex; align-items: center; min-height: 25px; padding: 3px 8px; border-radius: 5px; background: #f2f5f8; color: var(--muted); font-size: 0.74rem; font-weight: 800; }
+.semester-body { display: grid; gap: 8px; padding: 12px 14px 15px; }
+.course-table-group { border: 1px solid #e8ecf2; border-radius: 8px; overflow: hidden; background: #fff; }
+.course-table-group + .course-table-group { margin-top: 8px; }
+.course-table-group-title { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 10px; background: #f5f8fc; border-bottom: 1px solid #e8ecf2; color: var(--ink); font-size: 0.8rem; font-weight: 900; }
+.course-table-wrap { overflow-x: auto; }
+.course-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+.course-table th, .course-table td { border: 1px solid #e8ecf2; padding: 6px 7px; text-align: center; vertical-align: middle; }
+.course-table th { background: #fbfcfd; color: var(--muted); font-weight: 800; }
+.course-table td:nth-child(2) { text-align: left; font-weight: 700; }
+.heat-row.heat-low td { background: #f8fbff; }
+.heat-row.heat-mid td { background: #edf5ff; }
+.heat-row.heat-high td { background: #e0ecff; }
+.tag { display: inline-flex; align-items: center; min-height: 22px; padding: 2px 7px; border-radius: 5px; background: #f1f3f6; color: var(--muted); font-size: 0.71rem; font-weight: 800; }
+.tag.math { background: var(--blue-soft); color: var(--blue); }
+.tag.science { background: var(--primary-soft); color: var(--primary); }
+.tag.info { background: var(--violet-soft); color: var(--violet); }
+.tag.core { background: var(--accent-soft); color: var(--accent); }
+.tag.recommended { background: var(--gold-soft); color: var(--gold); }
+.tag.reflected { background: var(--blue-soft); color: var(--blue); }
+.recommend-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); gap: 16px; }
+.recommend-card { background: var(--panel); border: 1px solid rgba(20,30,40,0.07); border-radius: var(--radius); box-shadow: var(--shadow); }
+.recommend-header { padding: 14px 16px 10px; border-bottom: 1px solid #edf0f5; }
+.recommend-title h3 { font-size: 1rem; font-weight: 900; }
+.division-line { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+.department-name { color: var(--muted); font-size: 0.8rem; margin-top: 4px; }
+.recommend-body { padding: 12px 16px 14px; display: grid; gap: 8px; }
+.info-row { display: grid; grid-template-columns: 64px 1fr; gap: 8px; align-items: start; }
+.label { color: var(--muted); font-size: 0.78rem; font-weight: 800; padding-top: 3px; }
+.subject-cloud { display: flex; flex-wrap: wrap; gap: 4px; }
+.match-note { color: var(--muted); font-size: 0.76rem; line-height: 1.5; padding-top: 4px; }
+.empty { padding: 32px; text-align: center; color: var(--muted); }
+.footer { text-align: center; padding: 20px 18px; color: var(--muted); font-size: 0.78rem; border-top: 1px solid var(--line); }
+@media (max-width: 900px) {
+  .semester-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .filter-groups { grid-template-columns: 1fr; flex: 1 1 100%; }
+}
+@media (max-width: 600px) {
+  .semester-grid { grid-template-columns: 1fr; }
+  .info-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ① 로그인 화면 -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+      </svg>
+    </div>
+    <h1>전주여자고등학교<br>교육과정 탐색</h1>
+    <p>학교 Google 계정으로 로그인하세요</p>
+
+    <div class="login-error" id="loginError"></div>
+
+    <div id="googleLoginBtn"></div>
+
+    <p class="login-notice">학교 계정(@jjgh.hs.kr)만 접속 가능합니다</p>
+  </div>
+</div>
+
+<!-- ② 앱 메인 화면 -->
+<div id="appScreen">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <div>
+          <div class="eyebrow">JJGHS Curriculum Navigator</div>
+          <h1>교육과정 분석 및 대학 추천 과목 탐색</h1>
+        </div>
+      </div>
+      <div class="user-info">
+        <img class="user-avatar" id="userAvatar" src="" alt="프로필">
+        <span class="user-name" id="userName"></span>
+        <button class="logout-btn" id="logoutBtn">로그아웃</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 로딩 중 -->
+  <div id="loadingScreen">
+    <div class="spinner"></div>
+    <div class="loading-text">데이터를 불러오는 중...</div>
+  </div>
+
+  <!-- 검색/필터 컨트롤 -->
+  <div class="controls" id="controlsBar" style="display:none;">
+    <div class="controls-inner">
+      <div class="search-box">
+        <input id="searchInput" type="search" placeholder="과목, 대학, 권역, 계열, 학과, 키워드 검색">
+      </div>
+      <div class="filter-groups" id="multiFilterGroups" aria-label="권역-지역, 계열, 학과 필터">
+        <details class="multi-filter">
+          <summary>
+            <span class="multi-filter-label">권역-지역</span>
+            <span class="filter-summary" id="regionSummary">전체</span>
+          </summary>
+          <div class="multi-filter-options" id="regionOptions"></div>
+        </details>
+        <details class="multi-filter">
+          <summary>
+            <span class="multi-filter-label">계열</span>
+            <span class="filter-summary" id="seriesSummary">전체</span>
+          </summary>
+          <div class="multi-filter-options" id="seriesOptions"></div>
+        </details>
+        <details class="multi-filter">
+          <summary>
+            <span class="multi-filter-label">학과</span>
+            <span class="filter-summary" id="departmentSummary">전체</span>
+          </summary>
+          <div class="multi-filter-options" id="departmentOptions"></div>
+        </details>
+      </div>
+      <select class="sort-select" id="sortSelect" aria-label="정렬">
+        <option value="name">대학·계열·학과명순</option>
+        <option value="core">핵심 과목 많은순</option>
+        <option value="match">개설 일치순</option>
+      </select>
+      <button class="filter-reset-btn" id="resetFiltersBtn" type="button">필터 초기화</button>
+    </div>
+  </div>
+
+  <!-- 메인 콘텐츠 -->
+  <div id="mainContent">
+    <main class="container">
+      <section class="sticky-semesters semester-section" id="semesterPanel" aria-labelledby="semesterTitle">
+        <div class="section-head">
+          <div class="title-inline">
+            <h2 id="semesterTitle">학기별 과목 리스트</h2>
+            <button class="toggle-btn" id="semesterToggle" type="button" aria-expanded="true">접기</button>
+          </div>
+          <div class="section-actions">
+            <div class="semester-filter-btns" id="semesterFilterButtons" aria-label="교과(군) 필터"></div>
+          </div>
+        </div>
+        <div class="semester-grid" id="semesterGrid"></div>
+      </section>
+
+      <section aria-labelledby="recommendTitle">
+        <div class="section-head">
+          <h2 id="recommendTitle">권역·계열·학과별 대학 반영과목 비교</h2>
+          <div class="stats-bar" id="recommendStats"></div>
+        </div>
+        <div class="recommend-grid" id="recommendGrid"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      추천 과목 데이터는 2028학년도 계열별 대표 모집단위별 반영과목 엑셀 자료를 기준으로 변환했습니다.
+      실제 상담 자료로 사용할 때는 각 대학의 최신 모집요강과 전공 안내 자료로 최종 확인하세요.
+    </footer>
+  </div>
+</div>
+
+<script type="module" src="src/app.js"></script>
+</body>
+</html>
