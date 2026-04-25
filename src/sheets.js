@@ -161,13 +161,15 @@ const GROUP_MAP = [
 ];
 
 // selectedMap → 행 배열 변환
+// 키 형식: 'semester::group::courseName'
 function selectionToRow(selectedMap, email, name) {
   const now = new Date().toISOString();
   const row = [now, email, name];
-  for (const { semester, pick } of GROUP_MAP) {
+  for (const { semester, group, pick } of GROUP_MAP) {
+    const prefix = semester + '::' + group + '::';
     const selected = Object.keys(selectedMap)
-      .filter(key => key.startsWith(semester + '::'))
-      .map(key => key.split('::')[1]);
+      .filter(key => key.startsWith(prefix))
+      .map(key => key.slice(prefix.length));
     for (let i = 0; i < pick; i++) row.push(selected[i] || '');
   }
   return row;
@@ -177,10 +179,10 @@ function selectionToRow(selectedMap, email, name) {
 function rowToSelection(row) {
   const selectedMap = {};
   let col = 3;
-  for (const { semester, pick } of GROUP_MAP) {
+  for (const { semester, group, pick } of GROUP_MAP) {
     for (let i = 0; i < pick; i++) {
-      const name = row[col] || '';
-      if (name) selectedMap[`${semester}::${name}`] = true;
+      const courseName = row[col] || '';
+      if (courseName) selectedMap[`${semester}::${group}::${courseName}`] = true;
       col++;
     }
   }

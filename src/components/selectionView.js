@@ -76,7 +76,7 @@ function renderSelectionGrid() {
           </div>
           <div class="sel-course-list">
             ${courses.map(c => {
-              const sel = isSelected(group.semester, c.name);
+              const sel = isSelected(group.semester, c.group, c.name);
               return `
                 <label class="sel-course-item ${sel ? 'selected' : ''}"
                   data-semester="${escapeHtml(group.semester)}"
@@ -145,9 +145,9 @@ function bindSelectionEvents() {
         showPickWarning(semester, group, pickNum);
         return;
       }
-      selectedMap[selKey(semester, course)] = true;
+      selectedMap[selKey(semester, group, course)] = true;
     } else {
-      delete selectedMap[selKey(semester, course)];
+      delete selectedMap[selKey(semester, group, course)];
     }
 
     // UI 즉시 반영
@@ -249,7 +249,7 @@ function updateCoreMatch(series, region) {
 
 // ── 진로 매칭 분석 ────────────────────────
 function isSubjectSelected(subj) {
-  return Object.keys(selectedMap).some(key => key.endsWith('::' + subj));
+  return Object.keys(selectedMap).some(key => key.split('::')[2] === subj);
 }
 
 function updateAnalysis(series, region) {
@@ -329,14 +329,14 @@ function updateAnalysis(series, region) {
 }
 
 // ── 유틸 ──────────────────────────────────
-function selKey(semester, course) { return `${semester}::${course}`; }
+function selKey(semester, group, course) { return `${semester}::${group}::${course}`; }
 function groupKey(semester, group) { return `${semester}_${group}`.replace(/\s/g, '_'); }
-function isSelected(semester, course) { return !!selectedMap[selKey(semester, course)]; }
+function isSelected(semester, group, course) { return !!selectedMap[selKey(semester, group, course)]; }
 
 function countGroupSelected(semester, group) {
   return semesterCourses
     .find(s => s.semester === semester)?.courses
-    .filter(c => c.group === group && isSelected(semester, c.name)).length || 0;
+    .filter(c => c.group === group && isSelected(semester, group, c.name)).length || 0;
 }
 
 function updateGroupCount(semester, group, pick) {
