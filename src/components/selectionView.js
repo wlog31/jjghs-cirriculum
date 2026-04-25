@@ -16,9 +16,22 @@ export async function initSelectionView(semesters, catalog) {
   semesterCourses = semesters;
   universityCatalog = catalog;
 
-  // 초기 로드 시 선택 내역 복원 스킵
-  // (저장 버튼 클릭 시 토큰 발급 후 자동 복원)
-  console.log('선택 모드 초기화 완료');
+  // 저장된 선택 내역 복원 (토큰 발급 후 Sheets에서 불러오기)
+  const user = getUser();
+  if (user) {
+    try {
+      const token = await requestAccessToken();
+      if (token) {
+        const saved = await fetchStudentSelection(user.email, token);
+        if (saved && Object.keys(saved).length > 0) {
+          selectedMap = saved;
+          console.log('선택 내역 복원 완료:', Object.keys(saved).length, '과목');
+        }
+      }
+    } catch (e) {
+      console.warn('선택 내역 복원 실패:', e);
+    }
+  }
 
   renderSelectionGrid();
   updateSummary();
