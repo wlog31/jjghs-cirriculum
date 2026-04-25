@@ -147,67 +147,69 @@ export async function fetchUniversityRecommendations() {
 
 // ── 학생 선택 데이터 ──────────────────────
 
-/**
- * 해당 학생의 선택 데이터 불러오기
- * 학생선택 시트에서 email 일치하는 마지막 행 반환
- */
-export async function fetchStudentSelection(email, token) {
-  const rows = await sheetsGet('학생선택!A:F', token, privateId());
-  if (rows.length < 2) return null;
+// 그룹별 열 매핑
+const GROUP_MAP = [
+  { semester: '2학년 1학기', group: '선택3', pick: 3 },
+  { semester: '2학년 1학기', group: '선택4', pick: 1 },
+  { semester: '2학년 2학기', group: '선택5', pick: 3 },
+  { semester: '2학년 2학기', group: '선택6', pick: 1 },
+  { semester: '3학년 1학기', group: '선택7', pick: 5 },
+  { semester: '3학년 1학기', group: '선택8', pick: 2 },
+  { semester: '3학년 1학기', group: '선택9', pick: 1 },
+  { semester: '3학년 2학기', group: '선택10', pick: 8 },
+  { semester: '3학년 2학기', group: '선택11', pick: 1 },
+];
 
-  const headers = rows[0];
-  const emailIdx = headers.indexOf('email');
-  const dataIdx = headers.indexOf('selectedSubjects');
-
-  // 해당 이메일의 마지막 행 찾기
-  let lastRow = null;
-  for (let i = 1; i < rows.length; i++) {
-    if (rows[i][emailIdx] === email) {
-      lastRow = rows[i];
-    }
+// selectedMap → 행 배열 변환
+function selectionToRow(selectedMap, email, name) {
+  const now = new Date().toISOString();
+  const row = [now, email, name];
+  for (const { semester, pick } of GROUP_MAP) {
+    const selected = Object.keys(selectedMap)
+      .filter(key => key.startsWith(semester + '::'))
+      .map(key => key.split('::')[1]);
+    for (let i = 0; i < pick; i++) row.push(selected[i] || '');
   }
-
-  if (!lastRow) return null;
-
-  try {
-    return JSON.parse(lastRow[dataIdx] || '{}');
-  } catch {
-    return {};
-  }
+  return row;
 }
 
-/**
- * 학생 선택 데이터 저장
- * 기존 행이 있으면 업데이트, 없으면 새 행 추가
- */
-export async function saveStudentSelection(email, name, selectedSubjects, token) {
-  // 토큰으로 읽기 (학생선택 시트는 비공개)
-  const pid = privateId();
-  const rows = await sheetsGet('학생선택!A:F', token, pid);
-  const headers = rows[0] || [];
-  const emailIdx = headers.indexOf('email');
-
-  const now = new Date().toISOString();
-  const newRow = [
-    now,
-    email,
-    name,
-    '',
-    JSON.stringify(selectedSubjects),
-    now,
-  ];
-
-  let existingRowNum = -1;
-  for (let i = 1; i < rows.length; i++) {
-    if (rows[i][emailIdx] === email) {
-      existingRowNum = i + 1;
+// 행 배열 → selectedMap 변환
+function rowToSelection(row) {
+  const selectedMap = {};
+  let col = 3;
+  for (const { semester, pick } of GROUP_MAP) {
+    for (let i = 0; i < pick; i++) {
+      const name = row[col] || '';
+      if (name) selectedMap[`${semester}::${name}`] = true;
+      col++;
     }
   }
+  return selectedMap;
+}
 
+export async function fetchStudentSelection(email, token) {
+  const rows = await sheetsGet('학생선택!A:AB', token, privateId());
+  if (rows.length < 2) return null;
+  let lastRow = null;
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][1] === email) lastRow = rows[i];
+  }
+  if (!lastRow) return null;
+  return rowToSelection(lastRow);
+}
+
+export async function saveStudentSelection(email, name, selectedMap, token) {
+  const pid = privateId();
+  const rows = await sheetsGet('학생선택!A:AB', token, pid);
+  const newRow = selectionToRow(selectedMap, email, name);
+  let existingRowNum = -1;
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][1] === email) existingRowNum = i + 1;
+  }
   if (existingRowNum > 0) {
-    await sheetsUpdate(`학생선택!A${existingRowNum}:F${existingRowNum}`, [newRow], token, pid);
+    await sheetsUpdate(`학생선택!A${existingRowNum}:AB${existingRowNum}`, [newRow], token, pid);
   } else {
-    await sheetsAppend('학생선택!A:F', [newRow], token, pid);
+    await sheetsAppend('학생선택!A:AB', [newRow], token, pid);
   }
 }
 
