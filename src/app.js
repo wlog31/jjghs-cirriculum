@@ -3,7 +3,8 @@ import { fetchSemesterCourses, fetchUniversityRecommendations } from './sheets.j
 import { setAllCourses } from './utils/normalize.js';
 import { renderSemesterFilterButtons, renderSemesters } from './components/semesterView.js';
 import { renderFilterOptions, renderRecommendations, getFilteredCatalog, bindFilterEvents } from './components/recommendView.js';
-import { initSelectionView } from './components/selectionView.js';
+import { initSelectionView, getSelectedMap } from './components/selectionView.js';
+import { renderMyplan } from './components/myplanView.js';
 
 let semesterCourses = [];
 let universityCatalog = [];
@@ -77,6 +78,7 @@ function bindTabEvents() {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
     document.getElementById('tabExplore').classList.toggle('active', tabId === 'explore');
     document.getElementById('tabSelect').classList.toggle('active', tabId === 'select');
+    document.getElementById('tabMyplan').classList.toggle('active', tabId === 'myplan');
 
     // 탐색 탭일 때만 controls 표시
     document.getElementById('controlsBar').style.display = tabId === 'explore' ? '' : 'none';
@@ -84,6 +86,10 @@ function bindTabEvents() {
     if (tabId === 'select' && !selectionInited) {
       selectionInited = true;
       await initSelectionView(semesterCourses, universityCatalog);
+    }
+
+    if (tabId === 'myplan') {
+      renderMyplan(semesterCourses, getSelectedMap());
     }
   });
 }

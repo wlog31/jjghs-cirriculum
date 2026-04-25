@@ -925,6 +925,202 @@ h1 {
 .ci-tag.job  { background:var(--gold-soft); color:var(--gold); }
 .ci-tag.next { background:var(--blue-soft); color:var(--blue); }
 .ci-sub { font-size:0.78rem; font-weight:800; color:var(--muted); margin:10px 0 6px; }
+
+/* ── 내 교육과정 보기 ── */
+.myplan-wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 20px 18px 48px;
+}
+.myplan-header { margin-bottom: 20px; }
+.myplan-header h2 { font-size: 1.1rem; font-weight: 900; color: var(--ink); margin-bottom: 4px; }
+.myplan-desc { font-size: 0.84rem; color: var(--muted); }
+
+/* 수형도 그리드 */
+.myplan-grid {
+  display: grid;
+  grid-template-columns: 100px repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--panel);
+}
+
+/* 헤더 행 */
+.myplan-col-head {
+  padding: 10px 14px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.15);
+}
+.myplan-col-head:last-child { border-right: none; }
+.myplan-col-head.area-head {
+  background: var(--primary-strong);
+}
+
+/* 교과군 행 */
+.myplan-area-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: var(--primary-strong);
+  background: var(--primary-soft);
+  border-right: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  writing-mode: initial;
+  text-align: center;
+}
+
+/* 셀 */
+.myplan-cell {
+  padding: 10px 10px;
+  border-right: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+.myplan-cell:last-child { border-right: none; }
+
+/* 과목 박스 */
+.myplan-course {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s;
+  border: 1.5px solid transparent;
+}
+.myplan-course:hover { transform: translateY(-1px); }
+.myplan-course.type-지정 {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-strong);
+}
+.myplan-course.type-일반 {
+  background: var(--blue-soft);
+  border-color: #b8d4f0;
+  color: #185fa5;
+}
+.myplan-course.type-진로 {
+  background: var(--gold-soft);
+  border-color: #e0c070;
+  color: var(--gold);
+}
+.myplan-course.type-융합 {
+  background: var(--violet-soft);
+  border-color: #c9bcf0;
+  color: var(--violet);
+}
+.myplan-course-name { flex: 1; line-height: 1.35; }
+.myplan-credit {
+  font-size: 0.68rem;
+  font-weight: 800;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* 화살표 연결선 */
+.myplan-cell::after {
+  content: '';
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 2px;
+  background: var(--line);
+  z-index: 1;
+}
+.myplan-cell:last-child::after { display: none; }
+
+/* 범례 */
+.myplan-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.myplan-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--muted);
+}
+.myplan-legend-dot {
+  width: 12px; height: 12px;
+  border-radius: 3px;
+  border: 1.5px solid transparent;
+}
+.myplan-legend-dot.type-지정 { background: var(--primary-soft); border-color: var(--primary); }
+.myplan-legend-dot.type-일반 { background: var(--blue-soft); border-color: #b8d4f0; }
+.myplan-legend-dot.type-진로 { background: var(--gold-soft); border-color: #e0c070; }
+.myplan-legend-dot.type-융합 { background: var(--violet-soft); border-color: #c9bcf0; }
+
+/* 빈 셀 */
+.myplan-empty {
+  font-size: 0.74rem;
+  color: #ccc;
+  text-align: center;
+  padding: 8px 0;
+  font-style: italic;
+}
+
+/* 전체 요약 */
+.myplan-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.myplan-summary-card {
+  flex: 1 1 150px;
+  padding: 12px 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-align: center;
+}
+.myplan-summary-num {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--primary);
+  line-height: 1.2;
+}
+.myplan-summary-label {
+  font-size: 0.76rem;
+  color: var(--muted);
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+@media (max-width: 800px) {
+  .myplan-grid {
+    grid-template-columns: 72px repeat(4, 1fr);
+    font-size: 0.74rem;
+  }
+  .myplan-course { padding: 5px 7px; }
+}
 </style>
 </head>
 <body>
@@ -976,6 +1172,7 @@ h1 {
   <nav class="tab-nav" id="tabNav" style="display:none;">
     <button class="tab-btn active" data-tab="explore" type="button">교육과정 탐색</button>
     <button class="tab-btn" data-tab="select" type="button">내 과목 선택</button>
+    <button class="tab-btn" data-tab="myplan" type="button">내 교육과정 보기</button>
   </nav>
 
   <!-- ── 탐색 탭 ── -->
@@ -1045,6 +1242,17 @@ h1 {
         추천 과목 데이터는 2028학년도 계열별 대표 모집단위별 반영과목 엑셀 자료를 기준으로 변환했습니다.
         실제 상담 자료로 사용할 때는 각 대학의 최신 모집요강과 전공 안내 자료로 최종 확인하세요.
       </footer>
+    </div>
+  </div>
+
+  <!-- ── 내 교육과정 탭 ── -->
+  <div class="tab-panel" id="tabMyplan">
+    <div class="myplan-wrap">
+      <div class="myplan-header">
+        <h2>내 교육과정 흐름</h2>
+        <p class="myplan-desc">선택한 과목을 교과군별·학기별로 정리한 수형도입니다.</p>
+      </div>
+      <div id="myplanContent"></div>
     </div>
   </div>
 
