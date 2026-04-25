@@ -3,13 +3,6 @@
 //  ID 토큰(로그인) + 액세스 토큰(Sheets 쓰기) 분리 처리
 // ─────────────────────────────────────────
 
-export const CONFIG = {
-  CLIENT_ID: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
-  SCHOOL_DOMAIN: 'jjg.hs.kr',
-  SHEETS_ID: 'YOUR_SPREADSHEET_ID',
-  API_KEY: 'YOUR_API_KEY',
-};
-
 // Sheets 쓰기에 필요한 scope
 const SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
 
