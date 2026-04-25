@@ -416,9 +416,9 @@ h1 {
 /* ── 선택 모드 ── */
 .selection-layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 260px 1fr;
   gap: 20px;
-  max-width: 1240px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 18px 18px 42px;
   align-items: start;
@@ -494,7 +494,15 @@ h1 {
 /* ── 선택 모드 과목 카드 ── */
 .sel-semester-grid {
   display: grid;
-  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+@media (max-width: 1200px) {
+  .sel-semester-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .sel-semester-grid { grid-template-columns: 1fr; }
 }
 .sel-semester-card {
   background: var(--panel);
