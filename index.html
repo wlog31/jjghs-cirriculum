@@ -351,10 +351,10 @@ h1 {
 .course-table th, .course-table td { border: 1px solid #e8ecf2; padding: 6px 7px; text-align: center; vertical-align: middle; word-break: keep-all; white-space: normal; }
 .course-table th { background: #fbfcfd; color: var(--muted); font-weight: 800; }
 .course-table td:nth-child(2) { text-align: left; font-weight: 700; }
-.course-table th:nth-child(1), .course-table td:nth-child(1) { width: 35%; }
-.course-table th:nth-child(2), .course-table td:nth-child(2) { width: 35%; }
-.course-table th:nth-child(3), .course-table td:nth-child(3) { width: 15%; }
-.course-table th:nth-child(4), .course-table td:nth-child(4) { width: 15%; }
+.course-table th:nth-child(1), .course-table td:nth-child(1) { width: 20%; }
+.course-table th:nth-child(2), .course-table td:nth-child(2) { width: 50%; }
+.course-table th:nth-child(3), .course-table td:nth-child(3) { width: 18%; }
+.course-table th:nth-child(4), .course-table td:nth-child(4) { width: 12%; }
 .heat-row.heat-low td { background: #f8fbff; }
 .heat-row.heat-mid td { background: #edf5ff; }
 .heat-row.heat-high td { background: #e0ecff; }
@@ -837,6 +837,94 @@ h1 {
   text-decoration-color: var(--primary);
   color: var(--primary);
 }
+
+/* ── 과목 소개 모달 내부 공통 스타일 (ci-*) ── */
+.ci-wrap { font-size:0.88rem; line-height:1.7; color:var(--ink); }
+.ci-sec { margin-bottom:22px; }
+.ci-sec-head {
+  display:flex; align-items:center; gap:8px;
+  font-size:0.9rem; font-weight:900; color:var(--primary);
+  padding:8px 12px; background:var(--primary-soft);
+  border-radius:8px; margin-bottom:12px;
+}
+.ci-sec-head .ci-icon { font-size:1rem; }
+.ci-info-table {
+  width:100%; border-collapse:collapse;
+  font-size:0.82rem; margin-bottom:12px;
+}
+.ci-info-table th, .ci-info-table td {
+  border:1px solid var(--line);
+  padding:7px 10px; text-align:center; vertical-align:middle;
+}
+.ci-info-table th {
+  background:#f5f8fc; color:var(--muted);
+  font-weight:800; font-size:0.78rem;
+}
+.ci-info-table td { font-weight:700; }
+.ci-check { color:var(--primary); font-weight:900; font-size:1rem; }
+.ci-dash  { color:var(--muted); }
+.ci-box {
+  padding:14px 16px;
+  background:linear-gradient(135deg,#f0faf5 0%,#e8f4ee 100%);
+  border-left:3px solid var(--primary);
+  border-radius:0 8px 8px 0;
+  font-size:0.85rem; line-height:1.75;
+  margin-bottom:12px; color:var(--ink);
+}
+.ci-box b { color:var(--primary-strong); }
+.ci-flow {
+  display:flex; align-items:flex-start; gap:6px;
+  flex-wrap:wrap; margin-bottom:12px;
+}
+.ci-flow-group {
+  flex:1 1 140px;
+  border:1px solid var(--line);
+  border-radius:8px; overflow:hidden;
+}
+.ci-flow-group-head {
+  padding:6px 10px;
+  font-size:0.76rem; font-weight:900;
+  text-align:center;
+}
+.ci-flow-group-head.common { background:#e8f4ee; color:var(--primary-strong); }
+.ci-flow-group-head.normal { background:#e8f1fb; color:#185fa5; }
+.ci-flow-group-head.career { background:#fff5d8; color:#854f0b; }
+.ci-flow-group-head.fusion { background:#f0ecfb; color:#7357b8; }
+.ci-flow-group-body { padding:8px 10px; background:var(--panel); }
+.ci-flow-item {
+  display:block; font-size:0.78rem; font-weight:700;
+  color:var(--ink); padding:3px 0;
+  border-bottom:1px dashed var(--line);
+}
+.ci-flow-item:last-child { border-bottom:none; }
+.ci-arrow {
+  align-self:center; color:var(--muted);
+  font-size:1.1rem; flex-shrink:0; padding-top:26px;
+}
+.ci-idea-list { display:grid; gap:8px; }
+.ci-idea-item {
+  display:flex; gap:10px; align-items:flex-start;
+  padding:10px 12px;
+  background:var(--panel);
+  border:1px solid var(--line); border-radius:8px;
+}
+.ci-idea-num {
+  width:22px; height:22px; border-radius:50%;
+  background:var(--primary); color:#fff;
+  font-size:0.72rem; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; margin-top:1px;
+}
+.ci-idea-text { font-size:0.83rem; line-height:1.65; color:var(--ink); }
+.ci-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+.ci-tag {
+  padding:4px 10px; border-radius:5px;
+  font-size:0.76rem; font-weight:800;
+}
+.ci-tag.dept { background:var(--primary-soft); color:var(--primary-strong); }
+.ci-tag.job  { background:var(--gold-soft); color:var(--gold); }
+.ci-tag.next { background:var(--blue-soft); color:var(--blue); }
+.ci-sub { font-size:0.78rem; font-weight:800; color:var(--muted); margin:10px 0 6px; }
 </style>
 </head>
 <body>
