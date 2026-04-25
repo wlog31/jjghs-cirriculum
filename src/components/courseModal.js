@@ -67,8 +67,8 @@ export async function openCourseModal(courseName, area = '') {
   document.body.style.overflow = 'hidden';
 
   // 과목 HTML 파일 로드 (교과군_과목명.html 형식)
-  const areaPrefix = area ? area.replace(/\s/g, '_') + '_' : '';
-  const filename = encodeURIComponent(areaPrefix + courseName.replace(/\s/g, '_')) + '.html';
+  const areaPrefix = area ? area.replace(/\s/g, '') + '_' : '';
+  const filename = areaPrefix + courseName.replace(/\s/g, '') + '.html';
   const basePath = getBasePath();
 
   try {
@@ -82,7 +82,7 @@ export async function openCourseModal(courseName, area = '') {
         <div class="cm-empty-icon">📋</div>
         <div class="cm-empty-title">${courseName}</div>
         <div class="cm-empty-desc">아직 과목 소개 자료가 준비되지 않았습니다.<br>
-          <code>data/courses/${areaPrefix}${courseName.replace(/\s/g, '_')}.html</code> 파일을 추가하면 표시됩니다.
+          <code>data/courses/${areaPrefix}${courseName.replace(/\s/g, '')}.html</code> 파일을 추가하면 표시됩니다.
         </div>
       </div>
     `;
