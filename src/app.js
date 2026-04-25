@@ -26,12 +26,9 @@ async function loadData() {
     semesterCourses = semesters;
     universityCatalog = universities;
 
-    const allCourses = semesters.flatMap(group => [
-      ...(group.requiredSubjects || []).map(name => ({
-        name, area: inferArea(name), type: '필수', group: '필수', semester: group.semester, credit: 0
-      })),
-      ...group.courses.map(c => ({ ...c, semester: group.semester }))
-    ]);
+    const allCourses = semesters.flatMap(group =>
+      group.courses.map(c => ({ ...c, semester: group.semester }))
+    );
     setAllCourses(allCourses);
 
     showLoading(false);

@@ -31,6 +31,7 @@ export function renderSemesterFilterButtons(semesterCourses) {
   });
 }
 
+
 // ── 학기 카드 렌더링 ──────────────────────
 export function renderSemesters(semesterCourses, searchQuery = '') {
   const grid = document.getElementById('semesterGrid');
@@ -47,15 +48,12 @@ export function renderSemesters(semesterCourses, searchQuery = '') {
   };
 
   grid.innerHTML = semesterCourses.map(group => {
-    const allCourses = [
-      ...(group.requiredSubjects || []).map(name => ({ name, area: 'required', type: '필수', group: '필수' })),
-      ...group.courses
-    ];
+    const allCourses = [...group.courses];
 
     // 필터링
     const filtered = allCourses.filter(course => {
       const areaLabel = areaLabels[course.area] || course.area;
-      const areaMatch = activeFilter === '전체' || areaLabel === activeFilter || course.area === 'required';
+      const areaMatch = activeFilter === '전체' || areaLabel === activeFilter;
       const searchMatch = !query || normalize(course.name).includes(query);
       return areaMatch && searchMatch;
     });

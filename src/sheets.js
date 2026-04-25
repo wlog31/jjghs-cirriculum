@@ -90,7 +90,7 @@ export async function fetchSemesterCourses() {
   const cached = sessionStorage.getItem('cache_semester');
   if (cached) return JSON.parse(cached);
 
-  const rows = await sheetsGet('학기별과목!A:H');
+  const rows = await sheetsGet('학기별과목!A:G');
   const objects = rowsToObjects(rows);
 
   // semester 기준으로 그룹핑
@@ -98,19 +98,15 @@ export async function fetchSemesterCourses() {
   for (const obj of objects) {
     const sem = obj.semester;
     if (!map.has(sem)) {
-      map.set(sem, {
-        semester: sem,
-        requiredSubjects: splitPipe(obj.requiredSubjects),
-        courses: [],
-      });
+      map.set(sem, { semester: sem, courses: [] });
     }
     map.get(sem).courses.push({
       name: obj.name,
       area: obj.area,
       type: obj.type,
       group: obj.group,
-      pick: Number(obj.pick),
-      credit: Number(obj.credit),
+      pick: Number(obj.pick) || 0,
+      credit: Number(obj.credit) || 0,
     });
   }
 

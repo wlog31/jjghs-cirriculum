@@ -45,14 +45,7 @@ function renderSelectionGrid() {
   if (!grid) return;
 
   grid.innerHTML = semesterCourses.map(group => {
-    // 필수 과목 먼저
-    const requiredHtml = (group.requiredSubjects || []).map(name => `
-      <div class="sel-course-item required">
-        <input type="checkbox" class="sel-course-cb" checked disabled>
-        <span class="sel-course-name">${escapeHtml(name)}</span>
-        <span class="sel-course-meta tag">필수</span>
-      </div>
-    `).join('');
+
 
     // 그룹별 선택 과목
     const groupMap = new Map();
@@ -78,6 +71,15 @@ function renderSelectionGrid() {
             ${courses.map(c => {
               const sel = isSelected(group.semester, c.group, c.name);
               return `
+                ${groupName === '지정' ? `
+                <div class="sel-course-item required">
+                  <input type="checkbox" class="sel-course-cb" checked disabled>
+                  <span class="sel-course-name course-name-link" data-course="${escapeHtml(c.name)}" data-area="${escapeHtml(areaLabels[c.area] || '')}">${escapeHtml(c.name)}</span>
+                  <span class="sel-course-meta">
+                    <span class="tag ${areaClass[c.area] || ''}">${escapeHtml(areaLabels[c.area] || c.area)}</span>
+                    ${c.credit}학점
+                  </span>
+                </div>` : `
                 <label class="sel-course-item ${sel ? 'selected' : ''}"
                   data-semester="${escapeHtml(group.semester)}"
                   data-course="${escapeHtml(c.name)}"
@@ -94,7 +96,7 @@ function renderSelectionGrid() {
                     <span class="tag ${areaClass[c.area] || ''}">${escapeHtml(areaLabels[c.area] || c.area)}</span>
                     ${c.credit}학점
                   </span>
-                </label>
+                </label>`}
               `;
             }).join('')}
           </div>
@@ -108,11 +110,6 @@ function renderSelectionGrid() {
           <h3>${escapeHtml(group.semester)}</h3>
         </div>
         <div class="sel-semester-body">
-          ${requiredHtml ? `
-            <div class="sel-group-block">
-              <div class="sel-group-title"><span>공통 필수 과목</span></div>
-              <div class="sel-course-list">${requiredHtml}</div>
-            </div>` : ''}
           ${groupsHtml}
         </div>
       </div>
