@@ -1,0 +1,237 @@
+<div class="course-intro">
+
+<style>
+.ci-wrap { font-size:0.88rem; line-height:1.7; color:var(--ink); }
+
+/* 섹션 */
+.ci-sec { margin-bottom:22px; }
+.ci-sec-head {
+  display:flex; align-items:center; gap:8px;
+  font-size:0.9rem; font-weight:900; color:var(--primary);
+  padding:8px 12px; background:var(--primary-soft);
+  border-radius:8px; margin-bottom:12px;
+}
+.ci-sec-head .ci-icon { font-size:1rem; }
+
+/* 과목 정보 표 */
+.ci-info-table {
+  width:100%; border-collapse:collapse;
+  font-size:0.82rem; margin-bottom:12px;
+}
+.ci-info-table th, .ci-info-table td {
+  border:1px solid var(--line);
+  padding:7px 10px; text-align:center; vertical-align:middle;
+}
+.ci-info-table th {
+  background:#f5f8fc; color:var(--muted);
+  font-weight:800; font-size:0.78rem;
+}
+.ci-info-table td { font-weight:700; }
+.ci-info-table .center { text-align:center; }
+.ci-check { color:var(--primary); font-weight:900; font-size:1rem; }
+.ci-dash  { color:var(--muted); }
+
+/* 설명 박스 */
+.ci-box {
+  padding:14px 16px;
+  background:linear-gradient(135deg,#f0faf5 0%,#e8f4ee 100%);
+  border-left:3px solid var(--primary);
+  border-radius:0 8px 8px 0;
+  font-size:0.85rem; line-height:1.75;
+  margin-bottom:12px; color:var(--ink);
+}
+.ci-box b { color:var(--primary-strong); }
+
+/* 관계 흐름 */
+.ci-flow {
+  display:flex; align-items:flex-start; gap:6px;
+  flex-wrap:wrap; margin-bottom:12px;
+}
+.ci-flow-group {
+  flex:1 1 140px;
+  border:1px solid var(--line);
+  border-radius:8px; overflow:hidden;
+}
+.ci-flow-group-head {
+  padding:6px 10px;
+  font-size:0.76rem; font-weight:900;
+  text-align:center;
+}
+.ci-flow-group-head.common { background:#e8f4ee; color:var(--primary-strong); }
+.ci-flow-group-head.normal { background:#e8f1fb; color:#185fa5; }
+.ci-flow-group-head.career { background:#fff5d8; color:#854f0b; }
+.ci-flow-group-head.fusion { background:#f0ecfb; color:#7357b8; }
+.ci-flow-group-body { padding:8px 10px; background:var(--panel); }
+.ci-flow-item {
+  display:block; font-size:0.78rem; font-weight:700;
+  color:var(--ink); padding:3px 0;
+  border-bottom:1px dashed var(--line);
+}
+.ci-flow-item:last-child { border-bottom:none; }
+.ci-arrow {
+  align-self:center; color:var(--muted);
+  font-size:1.1rem; flex-shrink:0; padding-top:26px;
+}
+
+/* 핵심 아이디어 카드 */
+.ci-idea-list { display:grid; gap:8px; }
+.ci-idea-item {
+  display:flex; gap:10px; align-items:flex-start;
+  padding:10px 12px;
+  background:var(--panel);
+  border:1px solid var(--line); border-radius:8px;
+}
+.ci-idea-num {
+  width:22px; height:22px; border-radius:50%;
+  background:var(--primary); color:#fff;
+  font-size:0.72rem; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; margin-top:1px;
+}
+.ci-idea-text { font-size:0.83rem; line-height:1.65; color:var(--ink); }
+
+/* 태그 */
+.ci-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+.ci-tag {
+  padding:4px 10px; border-radius:5px;
+  font-size:0.76rem; font-weight:800;
+}
+.ci-tag.dept { background:var(--primary-soft); color:var(--primary-strong); }
+.ci-tag.job  { background:var(--gold-soft); color:var(--gold); }
+.ci-tag.next { background:var(--blue-soft); color:var(--blue); }
+
+.ci-sub { font-size:0.78rem; font-weight:800; color:var(--muted); margin:10px 0 6px; }
+</style>
+
+<div class="ci-wrap">
+
+  <!-- ① 과목 기본 정보 -->
+  <div class="ci-sec">
+    <div class="ci-sec-head"><span class="ci-icon">📌</span> 어떤 과목일까요?</div>
+    <table class="ci-info-table">
+      <thead>
+        <tr>
+          <th rowspan="2">교과군</th>
+          <th colspan="3">선택 과목 유형</th>
+          <th colspan="2">평가 정보</th>
+          <th rowspan="2">이수학점</th>
+        </tr>
+        <tr>
+          <th>일반</th><th>진로</th><th>융합</th>
+          <th>성취도</th><th>등급</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>국어</td>
+          <td><span class="ci-check">●</span></td>
+          <td><span class="ci-dash">—</span></td>
+          <td><span class="ci-dash">—</span></td>
+          <td>5단계</td>
+          <td><span class="ci-check">●</span></td>
+          <td>기본 4학점<br><span style="font-size:0.74rem;color:var(--muted);">3학점 편성 가능</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="ci-box">
+      <b>문학</b>은 중학교 국어의 성격을 계승하여 문학 관련 학문의 기본 내용을 학습하는 과목입니다.
+      고등학교 선택 과목에서의 심화 학습을 위한 토대를 마련하고, 미래 사회에 대비할 수 있는
+      기본 역량을 함양합니다. 대학 진학 후 학문 활동과 사회 진출 후 직업 활동에 바탕이 되는
+      국어 능력을 기르는 데 목적이 있습니다.
+    </div>
+  </div>
+
+  <!-- ② 과목 간 관계 -->
+  <div class="ci-sec">
+    <div class="ci-sec-head"><span class="ci-icon">🔗</span> 다른 과목 간의 관계</div>
+    <div class="ci-flow">
+      <div class="ci-flow-group">
+        <div class="ci-flow-group-head common">공통 과목</div>
+        <div class="ci-flow-group-body">
+          <span class="ci-flow-item">공통국어 1</span>
+          <span class="ci-flow-item">공통국어 2</span>
+        </div>
+      </div>
+      <div class="ci-arrow">→</div>
+      <div class="ci-flow-group">
+        <div class="ci-flow-group-head normal">일반 선택</div>
+        <div class="ci-flow-group-body">
+          <span class="ci-flow-item" style="color:var(--primary);font-weight:900;">★ 문학</span>
+          <span class="ci-flow-item">화법과 언어</span>
+          <span class="ci-flow-item">독서와 작문</span>
+        </div>
+      </div>
+      <div class="ci-arrow">→</div>
+      <div class="ci-flow-group">
+        <div class="ci-flow-group-head career">진로 선택</div>
+        <div class="ci-flow-group-body">
+          <span class="ci-flow-item">주제 탐구 독서</span>
+          <span class="ci-flow-item">문학과 영상</span>
+          <span class="ci-flow-item">직무 의사소통</span>
+        </div>
+      </div>
+      <div class="ci-arrow">→</div>
+      <div class="ci-flow-group">
+        <div class="ci-flow-group-head fusion">융합 선택</div>
+        <div class="ci-flow-group-body">
+          <span class="ci-flow-item">독서 토론과 글쓰기</span>
+          <span class="ci-flow-item">매체 의사소통</span>
+          <span class="ci-flow-item">언어생활 탐구</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 무엇을 배울까요 -->
+  <div class="ci-sec">
+    <div class="ci-sec-head"><span class="ci-icon">📖</span> 무엇을 배울까요?</div>
+    <div class="ci-idea-list">
+      <div class="ci-idea-item">
+        <div class="ci-idea-num">1</div>
+        <div class="ci-idea-text">문학은 인간의 삶을 언어로 형상화한 예술로서, 독자에게 미적 체험과 삶에 대한 성찰의 기회를 제공합니다.</div>
+      </div>
+      <div class="ci-idea-item">
+        <div class="ci-idea-num">2</div>
+        <div class="ci-idea-text">문학 작품의 수용과 생산을 통해 자아를 성찰하고 타자를 이해하며 공동체의 문제를 인식할 수 있습니다.</div>
+      </div>
+      <div class="ci-idea-item">
+        <div class="ci-idea-num">3</div>
+        <div class="ci-idea-text">다양한 맥락 속에서 문학 작품을 감상하고 비평함으로써 문학적 소통 능력과 창의적 사고력을 기릅니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 진로 연계 -->
+  <div class="ci-sec">
+    <div class="ci-sec-head"><span class="ci-icon">🎯</span> 어떤 진로와 연결되어 있을까요?</div>
+    <div class="ci-sub">관련 학과</div>
+    <div class="ci-tags">
+      <span class="ci-tag dept">국어국문학과</span>
+      <span class="ci-tag dept">국어교육과</span>
+      <span class="ci-tag dept">신문방송학과</span>
+      <span class="ci-tag dept">미디어커뮤니케이션학과</span>
+      <span class="ci-tag dept">언어학과</span>
+      <span class="ci-tag dept">문헌정보학과</span>
+      <span class="ci-tag dept">문예창작학과</span>
+    </div>
+    <div class="ci-sub">관련 직업</div>
+    <div class="ci-tags">
+      <span class="ci-tag job">언론인</span>
+      <span class="ci-tag job">중등교사</span>
+      <span class="ci-tag job">독서지도사</span>
+      <span class="ci-tag job">출판물 편집자</span>
+      <span class="ci-tag job">평론가</span>
+      <span class="ci-tag job">프로듀서</span>
+      <span class="ci-tag job">번역가</span>
+      <span class="ci-tag job">문학자</span>
+    </div>
+    <div class="ci-sub">이후 심화 과목</div>
+    <div class="ci-tags">
+      <span class="ci-tag next">주제 탐구 독서</span>
+      <span class="ci-tag next">문학과 영상</span>
+      <span class="ci-tag next">독서 토론과 글쓰기</span>
+    </div>
+  </div>
+
+</div>
+</div>

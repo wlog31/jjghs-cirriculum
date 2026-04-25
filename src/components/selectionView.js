@@ -2,6 +2,7 @@
 //  components/selectionView.js  —  학생 과목 선택 모드
 // ─────────────────────────────────────────
 import { escapeHtml, areaLabels, areaClass } from '../utils/normalize.js';
+import { openCourseModal } from './courseModal.js';
 import { saveStudentSelection, fetchStudentSelection } from '../sheets.js';
 import { getUser, requestAccessToken, CONFIG } from '../auth.js';
 
@@ -88,7 +89,7 @@ function renderSelectionGrid() {
                     data-course="${escapeHtml(c.name)}"
                     data-group="${escapeHtml(groupName)}"
                     data-pick="${pick}">
-                  <span class="sel-course-name">${escapeHtml(c.name)}</span>
+                  <span class="sel-course-name course-name-link" data-course="${escapeHtml(c.name)}" data-area="${escapeHtml(areaLabels[c.area] || '')}">${escapeHtml(c.name)}</span>
                   <span class="sel-course-meta">
                     <span class="tag ${areaClass[c.area] || ''}">${escapeHtml(areaLabels[c.area] || c.area)}</span>
                     ${c.credit}학점
@@ -121,6 +122,13 @@ function renderSelectionGrid() {
 
 // ── 이벤트 바인딩 ─────────────────────────
 function bindSelectionEvents() {
+  // 과목명 클릭 → 모달
+  document.getElementById('selSemesterGrid')?.addEventListener('click', e => {
+    const link = e.target.closest('.course-name-link');
+    if (!link) return;
+    openCourseModal(link.dataset.course, link.dataset.area);
+  });
+
   // 과목 체크박스
   document.getElementById('selSemesterGrid')?.addEventListener('change', e => {
     const cb = e.target.closest('input.sel-course-cb[data-course]');

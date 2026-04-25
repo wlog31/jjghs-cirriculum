@@ -656,6 +656,187 @@ h1 {
   white-space: nowrap;
 }
 .univ-rank-item.rank-1 { border-color: var(--primary); background: var(--primary-soft); }
+
+/* ── 과목 소개 모달 ── */
+#courseModalOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(20,30,40,0.45);
+  z-index: 100;
+  backdrop-filter: blur(2px);
+}
+#courseModalOverlay.visible { display: block; }
+
+#courseModal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.96);
+  z-index: 101;
+  width: min(860px, 95vw);
+  max-height: 88vh;
+  background: var(--panel);
+  border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(20,30,40,0.18);
+  overflow: hidden;
+  display: none;
+  flex-direction: column;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  opacity: 0;
+}
+#courseModal.visible {
+  display: flex;
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.cm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.cm-title-wrap { display: flex; align-items: center; gap: 10px; }
+.cm-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 5px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+.cm-title {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--ink);
+}
+.cm-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cm-close:hover { background: var(--accent-soft); color: var(--accent); }
+
+.cm-body {
+  overflow-y: auto;
+  padding: 22px 24px 28px;
+  flex: 1;
+}
+
+/* 로딩 */
+.cm-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.cm-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--line);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* 준비 중 안내 */
+.cm-empty {
+  text-align: center;
+  padding: 40px 24px;
+}
+.cm-empty-icon { font-size: 2.5rem; margin-bottom: 14px; }
+.cm-empty-title { font-size: 1.1rem; font-weight: 900; margin-bottom: 10px; }
+.cm-empty-desc { color: var(--muted); font-size: 0.86rem; line-height: 1.7; }
+.cm-empty-desc code {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: var(--bg);
+  border-radius: 5px;
+  font-size: 0.8rem;
+  color: var(--primary);
+}
+
+/* 과목 소개 HTML 내부 스타일 */
+.cm-body .course-intro { font-size: 0.9rem; line-height: 1.7; color: var(--ink); }
+.cm-body .ci-section { margin-bottom: 24px; }
+.cm-body .ci-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--primary);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--primary-soft);
+}
+.cm-body .ci-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+  margin-bottom: 12px;
+}
+.cm-body .ci-table th, .cm-body .ci-table td {
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+.cm-body .ci-table th { background: var(--bg); font-weight: 800; color: var(--muted); }
+.cm-body .ci-table td { font-weight: 700; }
+.cm-body .ci-desc {
+  padding: 14px 16px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--primary);
+  font-size: 0.86rem;
+  line-height: 1.75;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.cm-body .ci-tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.cm-body .ci-tag {
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.cm-body .ci-tag.related { background: var(--primary-soft); color: var(--primary); }
+.cm-body .ci-tag.job { background: var(--gold-soft); color: var(--gold); }
+.cm-body .ci-tag.next { background: var(--blue-soft); color: var(--blue); }
+
+/* 과목 클릭 커서 */
+.course-name-link {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.15s;
+}
+.course-name-link:hover {
+  text-decoration-color: var(--primary);
+  color: var(--primary);
+}
 </style>
 </head>
 <body>

@@ -2,6 +2,7 @@
 //  components/semesterView.js  —  학기별 과목 카드
 // ─────────────────────────────────────────
 import { escapeHtml, areaLabels, areaClass, isCourseOpened, getCourseMatches, normalize } from '../utils/normalize.js';
+import { openCourseModal } from './courseModal.js';
 
 const semesterFilterState = { activeFilter: '전체' };
 
@@ -37,6 +38,13 @@ export function renderSemesters(semesterCourses, searchQuery = '') {
 
   const query = normalize(searchQuery);
   const activeFilter = semesterFilterState.activeFilter;
+
+  // 과목명 클릭 이벤트 (이벤트 위임)
+  grid.onclick = e => {
+    const link = e.target.closest('.course-name-link');
+    if (!link) return;
+    openCourseModal(link.dataset.course, link.dataset.area);
+  };
 
   grid.innerHTML = semesterCourses.map(group => {
     const allCourses = [
@@ -97,7 +105,7 @@ export function renderSemesters(semesterCourses, searchQuery = '') {
                           <td><span class="tag ${areaClass[course.area] || ''}">${
                             escapeHtml(areaLabels[course.area] || course.area)
                           }</span></td>
-                          <td>${escapeHtml(course.name)}</td>
+                          <td><span class="course-name-link" data-course="${escapeHtml(course.name)}" data-area="${escapeHtml(areaLabels[course.area] || '')}">${escapeHtml(course.name)}</span></td>
                           <td>${escapeHtml(course.type || '')}</td>
                           <td>${course.credit || '-'}</td>
                         </tr>
