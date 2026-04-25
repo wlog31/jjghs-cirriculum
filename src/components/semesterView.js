@@ -70,9 +70,6 @@ export function renderSemesters(semesterCourses, searchQuery = '') {
         <header>
           <h3>${escapeHtml(group.semester)}</h3>
           <div class="semester-meta">
-            ${(group.requiredSubjects || []).map(s =>
-              `<span class="mini-stat">필수: ${escapeHtml(s)}</span>`
-            ).join('')}
             <span class="mini-stat">총 ${totalCredits}학점</span>
             <span class="mini-stat">개설 ${openedCount}/${group.courses.length}</span>
           </div>

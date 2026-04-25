@@ -92,9 +92,6 @@ function renderSelectionGrid() {
       <div class="sel-semester-card">
         <div class="sel-semester-header">
           <h3>${escapeHtml(group.semester)}</h3>
-          ${group.requiredSubjects?.length
-            ? `<span class="sel-pick-badge">필수: ${group.requiredSubjects.join(', ')}</span>`
-            : ''}
         </div>
         <div class="sel-semester-body">
           ${requiredHtml ? `
