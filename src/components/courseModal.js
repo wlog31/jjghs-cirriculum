@@ -68,21 +68,33 @@ export async function openCourseModal(courseName, area = '') {
 
   // 과목 HTML 파일 로드 (교과군_과목명.html 형식)
   const areaPrefix = area ? area.replace(/\s/g, '') + '_' : '';
-  const filename = areaPrefix + courseName.replace(/\s/g, '') + '.html';
   const basePath = getBasePath();
 
-  try {
-    const res = await fetch(`${basePath}data/courses/${filename}`);
-    if (!res.ok) throw new Error('not found');
-    const html = await res.text();
-    document.getElementById('cmBody').innerHTML = html;
-  } catch {
+  // 공백 제거 버전 → 공백 포함 버전 순서로 시도
+  const candidates = [
+    areaPrefix + courseName.replace(/\s/g, '') + '.html',
+    areaPrefix + courseName + '.html',
+  ];
+
+  let loaded = false;
+  for (const filename of candidates) {
+    try {
+      const res = await fetch(`${basePath}data/courses/${filename}`);
+      if (!res.ok) continue;
+      const html = await res.text();
+      document.getElementById('cmBody').innerHTML = html;
+      loaded = true;
+      break;
+    } catch { continue; }
+  }
+
+  if (!loaded) {
     document.getElementById('cmBody').innerHTML = `
       <div class="cm-empty">
         <div class="cm-empty-icon">📋</div>
         <div class="cm-empty-title">${courseName}</div>
         <div class="cm-empty-desc">아직 과목 소개 자료가 준비되지 않았습니다.<br>
-          <code>data/courses/${areaPrefix}${courseName.replace(/\s/g, '')}.html</code> 파일을 추가하면 표시됩니다.
+          <code>data/courses/${candidates[0]}</code> 파일을 추가하면 표시됩니다.
         </div>
       </div>
     `;

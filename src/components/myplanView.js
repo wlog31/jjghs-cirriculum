@@ -4,9 +4,54 @@
 import { escapeHtml, areaLabels } from '../utils/normalize.js';
 import { openCourseModal } from './courseModal.js';
 
-const SEMESTERS = ['2학년 1학기', '2학년 2학기', '3학년 1학기', '3학년 2학기'];
+const SEMESTERS = [
+  '1학년 1학기', '1학년 2학기',
+  '2학년 1학기', '2학년 2학기',
+  '3학년 1학기', '3학년 2학기'
+];
 
-const AREA_ORDER = ['korean', 'math', 'english', 'social', 'science', 'info', 'language', 'liberal', 'arts'];
+// 1학년 고정 과목 (코드에 직접 관리)
+const GRADE1_COURSES = {
+  '1학년 1학기': {
+    korean:  [{ name: '공통국어1',      area: 'korean',  type: '지정', credit: 4 }],
+    math:    [{ name: '공통수학1',      area: 'math',    type: '지정', credit: 4 }],
+    english: [{ name: '공통영어1',      area: 'english', type: '지정', credit: 4 }],
+    science: [
+      { name: '통합과학1',     area: 'science', type: '지정', credit: 4 },
+      { name: '과학탐구실험1', area: 'science', type: '지정', credit: 1 },
+    ],
+    social:  [
+      { name: '통합사회1',     area: 'social',  type: '지정', credit: 4 },
+      { name: '한국사1',       area: 'social',  type: '지정', credit: 4 },
+    ],
+    arts:    [{ name: '음악/미술',      area: 'arts',    type: '지정', credit: 2 }],
+    pe:      [{ name: '체육1',          area: 'pe',      type: '지정', credit: 2 }],
+  },
+  '1학년 2학기': {
+    korean:  [{ name: '공통국어2',      area: 'korean',  type: '지정', credit: 4 }],
+    math:    [{ name: '공통수학2',      area: 'math',    type: '지정', credit: 4 }],
+    english: [{ name: '공통영어2',      area: 'english', type: '지정', credit: 4 }],
+    science: [
+      { name: '통합과학2',     area: 'science', type: '지정', credit: 4 },
+      { name: '과학탐구실험2', area: 'science', type: '지정', credit: 1 },
+    ],
+    social:  [
+      { name: '통합사회2',     area: 'social',  type: '지정', credit: 4 },
+      { name: '한국사2',       area: 'social',  type: '지정', credit: 4 },
+    ],
+    arts:    [{ name: '미술/음악',      area: 'arts',    type: '지정', credit: 2 }],
+    pe:      [{ name: '체육2',          area: 'pe',      type: '지정', credit: 2 }],
+  },
+};
+
+// 체육은 모든 학기 고정
+const PE_BY_SEM = {
+  '1학년 1학기': '체육1', '1학년 2학기': '체육2',
+  '2학년 1학기': '체육3', '2학년 2학기': '체육4',
+  '3학년 1학기': '체육5', '3학년 2학기': '체육6',
+};
+
+const AREA_ORDER = ['korean', 'math', 'english', 'social', 'science', 'info', 'language', 'liberal', 'arts', 'pe'];
 
 const AREA_LABEL = {
   korean: '국어', math: '수학', english: '영어',
@@ -128,21 +173,34 @@ export function renderMyplan(semesterCourses, selectedMap) {
 function buildMyCoursesMap(semesterCourses, selectedMap) {
   const map = {};
 
+  // 1학년 고정 과목 먼저
+  for (const [sem, areas] of Object.entries(GRADE1_COURSES)) {
+    map[sem] = {};
+    for (const [area, courses] of Object.entries(areas)) {
+      map[sem][area] = [...courses];
+    }
+  }
+
+  // 2~3학년 선택 과목
   for (const group of semesterCourses) {
     const sem = group.semester;
     if (!map[sem]) map[sem] = {};
 
     for (const c of group.courses) {
-      // 지정 과목은 항상 포함, 선택 과목은 selectedMap 확인
       const isSelected = c.group === '지정' ||
         Object.keys(selectedMap).some(key => key === `${sem}::${c.group}::${c.name}`);
-
       if (!isSelected) continue;
-
       const area = c.area || 'liberal';
       if (!map[sem][area]) map[sem][area] = [];
       map[sem][area].push(c);
     }
+  }
+
+  // 모든 학기에 체육 추가
+  for (const sem of SEMESTERS) {
+    if (!map[sem]) map[sem] = {};
+    const peName = PE_BY_SEM[sem];
+    if (peName) map[sem]['pe'] = [{ name: peName, area: 'pe', type: '지정', credit: 2 }];
   }
 
   return map;
@@ -150,6 +208,15 @@ function buildMyCoursesMap(semesterCourses, selectedMap) {
 
 function calcTotalCredit(semesterCourses, selectedMap) {
   let total = 0;
+  // 1학년 고정 학점
+  for (const areas of Object.values(GRADE1_COURSES)) {
+    for (const courses of Object.values(areas)) {
+      for (const c of courses) total += c.credit || 0;
+    }
+  }
+  // 체육 학점 (전 학기)
+  total += Object.keys(PE_BY_SEM).length * 2;
+  // 2~3학년 선택 학점
   for (const group of semesterCourses) {
     for (const c of group.courses) {
       const isSelected = c.group === '지정' ||

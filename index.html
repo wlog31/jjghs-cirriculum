@@ -939,7 +939,7 @@ h1 {
 /* 수형도 그리드 */
 .myplan-grid {
   display: grid;
-  grid-template-columns: 100px repeat(4, 1fr);
+  grid-template-columns: 80px repeat(6, 1fr);
   gap: 0;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -955,9 +955,7 @@ h1 {
   font-size: 0.82rem;
   font-weight: 900;
   text-align: center;
-  border-right: 1px solid rgba(255,255,255,0.15);
 }
-.myplan-col-head:last-child { border-right: none; }
 .myplan-col-head.area-head {
   background: var(--primary-strong);
 }
@@ -981,7 +979,6 @@ h1 {
 /* 셀 */
 .myplan-cell {
   padding: 10px 10px;
-  border-right: 1px solid var(--line);
   border-top: 1px solid var(--line);
   min-height: 80px;
   display: flex;
@@ -989,7 +986,6 @@ h1 {
   gap: 6px;
   position: relative;
 }
-.myplan-cell:last-child { border-right: none; }
 
 /* 과목 박스 */
 .myplan-course {
@@ -1034,19 +1030,7 @@ h1 {
   white-space: nowrap;
 }
 
-/* 화살표 연결선 */
-.myplan-cell::after {
-  content: '';
-  position: absolute;
-  right: -12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 12px;
-  height: 2px;
-  background: var(--line);
-  z-index: 1;
-}
-.myplan-cell:last-child::after { display: none; }
+
 
 /* 범례 */
 .myplan-legend {
@@ -1116,7 +1100,7 @@ h1 {
 
 @media (max-width: 800px) {
   .myplan-grid {
-    grid-template-columns: 72px repeat(4, 1fr);
+    grid-template-columns: 60px repeat(6, 1fr);
     font-size: 0.74rem;
   }
   .myplan-course { padding: 5px 7px; }
