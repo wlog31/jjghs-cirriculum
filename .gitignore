@@ -1,0 +1,9 @@
+# 환경 설정 (민감한 키 값 포함)
+src/config.js
+
+# 개발 도구
+node_modules/
+.env
+.env.local
+.DS_Store
+Thumbs.db

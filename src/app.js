@@ -1,11 +1,9 @@
-// ─────────────────────────────────────────
-//  app.js  —  메인 진입점
-// ─────────────────────────────────────────
 import { initAuth, signOut } from './auth.js';
 import { fetchSemesterCourses, fetchUniversityRecommendations } from './sheets.js';
 import { setAllCourses } from './utils/normalize.js';
 import { renderSemesterFilterButtons, renderSemesters } from './components/semesterView.js';
-import { renderFilterOptions, renderRecommendations, getFilteredCatalog, bindFilterEvents, filterState } from './components/recommendView.js';
+import { renderFilterOptions, renderRecommendations, getFilteredCatalog, bindFilterEvents } from './components/recommendView.js';
+import { initSelectionView } from './components/selectionView.js';
 
 let semesterCourses = [];
 let universityCatalog = [];
@@ -45,12 +43,21 @@ async function loadData() {
 }
 
 function renderApp() {
+  // 탭 + controls 표시
+  document.getElementById('tabNav').style.display = '';
+  document.getElementById('controlsBar').style.display = '';
   document.getElementById('mainContent').classList.add('visible');
+
+  // 탐색 모드
   renderSemesterFilterButtons(semesterCourses);
   renderSemesters(semesterCourses, '');
   renderFilterOptions(universityCatalog);
   update();
   bindFilterEvents(update);
+
+  document.getElementById('searchInput')?.addEventListener('input', e => {
+    renderSemesters(semesterCourses, e.target.value);
+  });
 
   document.getElementById('semesterToggle')?.addEventListener('click', () => {
     const panel = document.getElementById('semesterPanel');
@@ -59,8 +66,28 @@ function renderApp() {
     toggle.textContent = collapsed ? '펼치기' : '접기';
   });
 
-  document.getElementById('searchInput')?.addEventListener('input', e => {
-    renderSemesters(semesterCourses, e.target.value);
+  bindTabEvents();
+}
+
+let selectionInited = false;
+
+function bindTabEvents() {
+  document.getElementById('tabNav')?.addEventListener('click', async e => {
+    const btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    const tabId = btn.dataset.tab;
+
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+    document.getElementById('tabExplore').classList.toggle('active', tabId === 'explore');
+    document.getElementById('tabSelect').classList.toggle('active', tabId === 'select');
+
+    // 탐색 탭일 때만 controls 표시
+    document.getElementById('controlsBar').style.display = tabId === 'explore' ? '' : 'none';
+
+    if (tabId === 'select' && !selectionInited) {
+      selectionInited = true;
+      await initSelectionView(semesterCourses, universityCatalog);
+    }
   });
 }
 

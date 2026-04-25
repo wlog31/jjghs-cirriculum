@@ -268,7 +268,6 @@ h1 {
   position: sticky; top: 0; z-index: 20;
   background: rgba(247,248,250,0.96);
   border-bottom: 1px solid var(--line);
-  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 .controls-inner {
@@ -383,6 +382,268 @@ h1 {
   .semester-grid { grid-template-columns: 1fr; }
   .info-row { grid-template-columns: 1fr; }
 }
+
+/* ── 탭 네비게이션 ── */
+.tab-nav {
+  display: flex;
+  gap: 0;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  padding: 0 18px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.tab-btn {
+  min-height: 44px;
+  padding: 0 20px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-btn:hover { color: var(--primary); }
+.tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+/* ── 탭 패널 ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── 선택 모드 ── */
+.selection-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 18px 18px 42px;
+  align-items: start;
+}
+.selection-sidebar {
+  position: sticky;
+  top: 48px;
+  display: grid;
+  gap: 14px;
+}
+.sel-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+.sel-card-title {
+  font-size: 0.88rem;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.career-select {
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 0.86rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.career-select:focus { outline: 3px solid rgba(17,97,73,0.14); border-color: var(--primary); }
+.summary-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.82rem;
+}
+.summary-stat:last-child { border-bottom: none; }
+.summary-stat-label { color: var(--muted); font-weight: 700; }
+.summary-stat-value { font-weight: 900; color: var(--primary); }
+.save-btn {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.save-btn:hover { background: var(--primary-strong); }
+.save-btn:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
+.save-status {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--muted);
+  min-height: 20px;
+  margin-top: 6px;
+}
+.save-status.success { color: var(--primary); }
+.save-status.error { color: var(--accent); }
+
+/* ── 선택 모드 과목 카드 ── */
+.sel-semester-grid {
+  display: grid;
+  gap: 16px;
+}
+.sel-semester-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.sel-semester-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #edf0f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sel-semester-header h3 { font-size: 1rem; font-weight: 900; }
+.sel-pick-badge {
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.sel-semester-body { padding: 12px 16px 16px; display: grid; gap: 10px; }
+.sel-group-block { border: 1px solid #e8ecf2; border-radius: 8px; overflow: hidden; }
+.sel-group-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #f5f8fc;
+  border-bottom: 1px solid #e8ecf2;
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: var(--ink);
+}
+.sel-group-count {
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--line);
+  color: var(--muted);
+}
+.sel-group-count.valid { background: var(--primary-soft); color: var(--primary); }
+.sel-group-count.over { background: var(--accent-soft); color: var(--accent); }
+.sel-course-list { padding: 6px 8px; display: grid; gap: 4px; }
+.sel-course-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.sel-course-item:hover { background: #f7f8fa; }
+.sel-course-item.selected { background: var(--primary-soft); }
+.sel-course-item.required {
+  background: #f0fdf4;
+  cursor: default;
+  opacity: 0.85;
+}
+.sel-course-cb { accent-color: var(--primary); width: 15px; height: 15px; flex-shrink: 0; }
+.sel-course-name { font-size: 0.84rem; font-weight: 700; color: var(--ink); flex: 1; }
+.sel-course-meta { font-size: 0.72rem; color: var(--muted); }
+.sel-course-item.selected .sel-course-name { color: var(--primary-strong); }
+
+@media (max-width: 800px) {
+  .selection-layout { grid-template-columns: 1fr; }
+  .selection-sidebar { position: static; }
+}
+
+/* ── 진로 매칭 분석 카드 ── */
+.analysis-section { margin-bottom: 14px; }
+.analysis-section:last-child { margin-bottom: 0; }
+.analysis-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.analysis-label.warning { color: var(--accent); }
+.analysis-bar-wrap {
+  height: 8px;
+  background: var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.analysis-bar {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+.analysis-bar-text {
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: var(--primary);
+  text-align: right;
+}
+.missing-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.missing-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+.univ-rank-list { display: grid; gap: 6px; }
+.univ-rank-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+  align-items: center;
+  padding: 7px 9px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+.univ-rank-name {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.univ-rank-dept {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.univ-rank-score {
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: var(--primary);
+  white-space: nowrap;
+}
+.univ-rank-item.rank-1 { border-color: var(--primary); background: var(--primary-soft); }
 </style>
 </head>
 <body>
@@ -430,74 +691,168 @@ h1 {
     <div class="loading-text">데이터를 불러오는 중...</div>
   </div>
 
-  <!-- 검색/필터 컨트롤 -->
-  <div class="controls" id="controlsBar" style="display:none;">
-    <div class="controls-inner">
-      <div class="search-box">
-        <input id="searchInput" type="search" placeholder="과목, 대학, 권역, 계열, 학과, 키워드 검색">
+  <!-- 탭 네비게이션 -->
+  <nav class="tab-nav" id="tabNav" style="display:none;">
+    <button class="tab-btn active" data-tab="explore" type="button">교육과정 탐색</button>
+    <button class="tab-btn" data-tab="select" type="button">내 과목 선택</button>
+  </nav>
+
+  <!-- ── 탐색 탭 ── -->
+  <div class="tab-panel active" id="tabExplore">
+    <div class="controls" id="controlsBar" style="display:none;">
+      <div class="controls-inner">
+        <div class="search-box">
+          <input id="searchInput" type="search" placeholder="과목, 대학, 권역, 계열, 학과, 키워드 검색">
+        </div>
+        <div class="filter-groups" id="multiFilterGroups" aria-label="권역-지역, 계열, 학과 필터">
+          <details class="multi-filter">
+            <summary>
+              <span class="multi-filter-label">권역-지역</span>
+              <span class="filter-summary" id="regionSummary">전체</span>
+            </summary>
+            <div class="multi-filter-options" id="regionOptions"></div>
+          </details>
+          <details class="multi-filter">
+            <summary>
+              <span class="multi-filter-label">계열</span>
+              <span class="filter-summary" id="seriesSummary">전체</span>
+            </summary>
+            <div class="multi-filter-options" id="seriesOptions"></div>
+          </details>
+          <details class="multi-filter">
+            <summary>
+              <span class="multi-filter-label">학과</span>
+              <span class="filter-summary" id="departmentSummary">전체</span>
+            </summary>
+            <div class="multi-filter-options" id="departmentOptions"></div>
+          </details>
+        </div>
+        <select class="sort-select" id="sortSelect" aria-label="정렬">
+          <option value="name">대학·계열·학과명순</option>
+          <option value="core">핵심 과목 많은순</option>
+          <option value="match">개설 일치순</option>
+        </select>
+        <button class="filter-reset-btn" id="resetFiltersBtn" type="button">필터 초기화</button>
       </div>
-      <div class="filter-groups" id="multiFilterGroups" aria-label="권역-지역, 계열, 학과 필터">
-        <details class="multi-filter">
-          <summary>
-            <span class="multi-filter-label">권역-지역</span>
-            <span class="filter-summary" id="regionSummary">전체</span>
-          </summary>
-          <div class="multi-filter-options" id="regionOptions"></div>
-        </details>
-        <details class="multi-filter">
-          <summary>
-            <span class="multi-filter-label">계열</span>
-            <span class="filter-summary" id="seriesSummary">전체</span>
-          </summary>
-          <div class="multi-filter-options" id="seriesOptions"></div>
-        </details>
-        <details class="multi-filter">
-          <summary>
-            <span class="multi-filter-label">학과</span>
-            <span class="filter-summary" id="departmentSummary">전체</span>
-          </summary>
-          <div class="multi-filter-options" id="departmentOptions"></div>
-        </details>
-      </div>
-      <select class="sort-select" id="sortSelect" aria-label="정렬">
-        <option value="name">대학·계열·학과명순</option>
-        <option value="core">핵심 과목 많은순</option>
-        <option value="match">개설 일치순</option>
-      </select>
-      <button class="filter-reset-btn" id="resetFiltersBtn" type="button">필터 초기화</button>
+    </div>
+
+    <div id="mainContent">
+      <main class="container">
+        <section class="sticky-semesters semester-section" id="semesterPanel" aria-labelledby="semesterTitle">
+          <div class="section-head">
+            <div class="title-inline">
+              <h2 id="semesterTitle">학기별 과목 리스트</h2>
+              <button class="toggle-btn" id="semesterToggle" type="button" aria-expanded="true">접기</button>
+            </div>
+            <div class="section-actions">
+              <div class="semester-filter-btns" id="semesterFilterButtons" aria-label="교과(군) 필터"></div>
+            </div>
+          </div>
+          <div class="semester-grid" id="semesterGrid"></div>
+        </section>
+
+        <section aria-labelledby="recommendTitle">
+          <div class="section-head">
+            <h2 id="recommendTitle">권역·계열·학과별 대학 반영과목 비교</h2>
+            <div class="stats-bar" id="recommendStats"></div>
+          </div>
+          <div class="recommend-grid" id="recommendGrid"></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        추천 과목 데이터는 2028학년도 계열별 대표 모집단위별 반영과목 엑셀 자료를 기준으로 변환했습니다.
+        실제 상담 자료로 사용할 때는 각 대학의 최신 모집요강과 전공 안내 자료로 최종 확인하세요.
+      </footer>
     </div>
   </div>
 
-  <!-- 메인 콘텐츠 -->
-  <div id="mainContent">
-    <main class="container">
-      <section class="sticky-semesters semester-section" id="semesterPanel" aria-labelledby="semesterTitle">
-        <div class="section-head">
-          <div class="title-inline">
-            <h2 id="semesterTitle">학기별 과목 리스트</h2>
-            <button class="toggle-btn" id="semesterToggle" type="button" aria-expanded="true">접기</button>
+  <!-- ── 선택 탭 ── -->
+  <div class="tab-panel" id="tabSelect">
+    <div class="selection-layout">
+
+      <!-- 사이드바 -->
+      <aside class="selection-sidebar">
+        <div class="sel-card">
+          <div class="sel-card-title">진로 설정</div>
+          <select class="career-select" id="careerSeries">
+            <option value="">계열 선택</option>
+            <option value="인문">인문</option>
+            <option value="사회">사회</option>
+            <option value="자연">자연</option>
+            <option value="공학">공학</option>
+            <option value="의학">의학</option>
+            <option value="교육">교육</option>
+            <option value="예체능">예체능</option>
+          </select>
+          <select class="career-select" id="careerRegion">
+            <option value="">관심 권역 (선택)</option>
+            <option value="수도권-서울">수도권-서울</option>
+            <option value="수도권-경기">수도권-경기</option>
+            <option value="중부권-강원">중부권-강원</option>
+            <option value="충청권">충청권</option>
+            <option value="호남권">호남권</option>
+            <option value="영남권-경북">영남권-경북</option>
+            <option value="영남권-경남">영남권-경남</option>
+            <option value="영남권-부산">영남권-부산</option>
+          </select>
+        </div>
+
+        <div class="sel-card">
+          <div class="sel-card-title">선택 현황</div>
+          <div class="summary-stat">
+            <span class="summary-stat-label">선택 과목 수</span>
+            <span class="summary-stat-value" id="statTotalCount">0</span>
           </div>
-          <div class="section-actions">
-            <div class="semester-filter-btns" id="semesterFilterButtons" aria-label="교과(군) 필터"></div>
+          <div class="summary-stat">
+            <span class="summary-stat-label">총 학점</span>
+            <span class="summary-stat-value" id="statTotalCredit">0</span>
+          </div>
+          <div class="summary-stat">
+            <span class="summary-stat-label">핵심과목 충족</span>
+            <span class="summary-stat-value" id="statCoreMatch">-</span>
           </div>
         </div>
-        <div class="semester-grid" id="semesterGrid"></div>
-      </section>
 
-      <section aria-labelledby="recommendTitle">
-        <div class="section-head">
-          <h2 id="recommendTitle">권역·계열·학과별 대학 반영과목 비교</h2>
-          <div class="stats-bar" id="recommendStats"></div>
+        <div class="sel-card">
+          <button class="save-btn" id="saveSelectionBtn" disabled>저장</button>
+          <div class="save-status" id="saveStatus"></div>
         </div>
-        <div class="recommend-grid" id="recommendGrid"></div>
-      </section>
-    </main>
 
-    <footer class="footer">
-      추천 과목 데이터는 2028학년도 계열별 대표 모집단위별 반영과목 엑셀 자료를 기준으로 변환했습니다.
-      실제 상담 자료로 사용할 때는 각 대학의 최신 모집요강과 전공 안내 자료로 최종 확인하세요.
-    </footer>
+        <!-- 진로 매칭 분석 카드 -->
+        <div class="sel-card" id="analysisCard" style="display:none;">
+          <div class="sel-card-title">진로 매칭 분석</div>
+
+          <!-- 전체 충족률 -->
+          <div class="analysis-section">
+            <div class="analysis-label">핵심과목 충족률</div>
+            <div class="analysis-bar-wrap">
+              <div class="analysis-bar" id="coreBar"></div>
+            </div>
+            <div class="analysis-bar-text" id="coreBarText">-</div>
+          </div>
+
+          <!-- 미선택 핵심과목 -->
+          <div class="analysis-section" id="missingSection" style="display:none;">
+            <div class="analysis-label warning">⚠ 미선택 핵심과목</div>
+            <div class="missing-list" id="missingList"></div>
+          </div>
+
+          <!-- 대학별 TOP 5 -->
+          <div class="analysis-section">
+            <div class="analysis-label">대학별 매칭 TOP 5</div>
+            <div class="univ-rank-list" id="univRankList"></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 과목 선택 그리드 -->
+      <div>
+        <div class="sel-semester-grid" id="selSemesterGrid"></div>
+      </div>
+    </div>
   </div>
+
 </div>
 
 <script type="module" src="src/app.js"></script>

@@ -5,11 +5,23 @@ import { CONFIG } from './auth.js';
 
 const BASE = 'https://sheets.googleapis.com/v4/spreadsheets';
 
+// 공개 시트 ID (학기별과목, 대학추천과목)
+const publicId = () => CONFIG.SHEETS_ID;
+// 비공개 시트 ID (학생선택) — 없으면 공개 ID 사용
+const privateId = () => CONFIG.PRIVATE_SHEETS_ID || CONFIG.SHEETS_ID;
+
 // ── 공통 fetch 헬퍼 ───────────────────────
 
-async function sheetsGet(range) {
-  const url = `${BASE}/${CONFIG.SHEETS_ID}/values/${encodeURIComponent(range)}?key=${CONFIG.API_KEY}`;
-  const res = await fetch(url);
+async function sheetsGet(range, token = null, sheetId = null) {
+  const id = sheetId || publicId();
+  let url, headers = {};
+  if (token) {
+    url = `${BASE}/${id}/values/${encodeURIComponent(range)}`;
+    headers['Authorization'] = `Bearer ${token}`;
+  } else {
+    url = `${BASE}/${id}/values/${encodeURIComponent(range)}?key=${CONFIG.API_KEY}`;
+  }
+  const res = await fetch(url, { headers });
   if (!res.ok) {
     const err = await res.json();
     throw new Error(`Sheets API 오류 [${range}]: ${err.error?.message}`);
@@ -19,8 +31,9 @@ async function sheetsGet(range) {
 }
 
 // 학생 데이터 쓰기용 (OAuth 토큰 필요)
-async function sheetsAppend(range, values, token) {
-  const url = `${BASE}/${CONFIG.SHEETS_ID}/values/${encodeURIComponent(range)}:append`
+async function sheetsAppend(range, values, token, sheetId = null) {
+  const id = sheetId || publicId();
+  const url = `${BASE}/${id}/values/${encodeURIComponent(range)}:append`
     + `?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
   const res = await fetch(url, {
     method: 'POST',
@@ -37,8 +50,9 @@ async function sheetsAppend(range, values, token) {
   return res.json();
 }
 
-async function sheetsUpdate(range, values, token) {
-  const url = `${BASE}/${CONFIG.SHEETS_ID}/values/${encodeURIComponent(range)}`
+async function sheetsUpdate(range, values, token, sheetId = null) {
+  const id = sheetId || publicId();
+  const url = `${BASE}/${id}/values/${encodeURIComponent(range)}`
     + `?valueInputOption=RAW`;
   const res = await fetch(url, {
     method: 'PUT',
@@ -138,7 +152,7 @@ export async function fetchUniversityRecommendations() {
  * 학생선택 시트에서 email 일치하는 마지막 행 반환
  */
 export async function fetchStudentSelection(email, token) {
-  const rows = await sheetsGet('학생선택!A:F');
+  const rows = await sheetsGet('학생선택!A:F', token, privateId());
   if (rows.length < 2) return null;
 
   const headers = rows[0];
@@ -167,34 +181,33 @@ export async function fetchStudentSelection(email, token) {
  * 기존 행이 있으면 업데이트, 없으면 새 행 추가
  */
 export async function saveStudentSelection(email, name, selectedSubjects, token) {
-  const rows = await sheetsGet('학생선택!A:F');
+  // 토큰으로 읽기 (학생선택 시트는 비공개)
+  const pid = privateId();
+  const rows = await sheetsGet('학생선택!A:F', token, pid);
   const headers = rows[0] || [];
   const emailIdx = headers.indexOf('email');
 
   const now = new Date().toISOString();
   const newRow = [
-    now,                                    // timestamp
-    email,                                  // email
-    name,                                   // name
-    '',                                     // semester (미사용)
-    JSON.stringify(selectedSubjects),       // selectedSubjects
-    now,                                    // updatedAt
+    now,
+    email,
+    name,
+    '',
+    JSON.stringify(selectedSubjects),
+    now,
   ];
 
-  // 기존 행 찾기
   let existingRowNum = -1;
   for (let i = 1; i < rows.length; i++) {
     if (rows[i][emailIdx] === email) {
-      existingRowNum = i + 1; // Sheets는 1-based
+      existingRowNum = i + 1;
     }
   }
 
   if (existingRowNum > 0) {
-    // 기존 행 업데이트
-    await sheetsUpdate(`학생선택!A${existingRowNum}:F${existingRowNum}`, [newRow], token);
+    await sheetsUpdate(`학생선택!A${existingRowNum}:F${existingRowNum}`, [newRow], token, pid);
   } else {
-    // 새 행 추가
-    await sheetsAppend('학생선택!A:F', [newRow], token);
+    await sheetsAppend('학생선택!A:F', [newRow], token, pid);
   }
 }
 
