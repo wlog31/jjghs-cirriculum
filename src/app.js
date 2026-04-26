@@ -89,6 +89,11 @@ function bindTabEvents() {
     }
 
     if (tabId === 'myplan') {
+      // 선택 탭을 열지 않은 경우 데이터 먼저 로드
+      if (!selectionInited) {
+        selectionInited = true;
+        await initSelectionView(semesterCourses, universityCatalog);
+      }
       renderMyplan(semesterCourses, getSelectedMap());
     }
   });
